@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:furniture_app/Screens/OnBoardingScreens/OnBoardingScreen.dart';
 
 import 'package:furniture_app/Screens/ProfileScreens/Model/MyProfileScreen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,9 +28,17 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
         actions: [
-          Icon(
-            Icons.exit_to_app,
-            color: Color(0xff242424),
+          IconButton(
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => OnBoardingScreen()),
+                  (route) => true);
+            },
+            icon: Icon(
+              Icons.exit_to_app,
+              color: Color(0xff242424),
+            ),
           ),
           SizedBox(
             width: 10,

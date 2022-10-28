@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:furniture_app/Screens/HomeScreens/HomePage.dart';
+import 'package:furniture_app/Screens/ReviewScreens/ReviewScreen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CongratzScreen extends StatelessWidget {
@@ -59,7 +59,13 @@ class CongratzScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: Color(0xff242424),
                       borderRadius: BorderRadius.circular(10)),
-                  child: Center(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ReviewScreen()));
+                    },
                     child: Text(
                       "Track your orders",
                       style: GoogleFonts.merriweather(
@@ -78,7 +84,13 @@ class CongratzScreen extends StatelessWidget {
                         color: Color(0xff242424),
                       ),
                       borderRadius: BorderRadius.circular(10)),
-                  child: Center(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (_) => HomePage()),
+                          (route) => true);
+                    },
                     child: Text(
                       "BACK TO HOME",
                       style: GoogleFonts.merriweather(

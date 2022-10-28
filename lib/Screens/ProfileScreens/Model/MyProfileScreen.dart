@@ -4,7 +4,7 @@ import '../MyOrders.dart';
 import '../MyReviews.dart';
 import '../PaymentMethod.dart';
 import '../Setting.dart';
-import 'ShippingAddress.dart';
+import '../ShippingAddress.dart';
 
 class MyProfileScreenModel {
   final String title;

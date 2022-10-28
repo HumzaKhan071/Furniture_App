@@ -51,7 +51,7 @@ class MyNotificationContainer extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Your order #123456789 has been ${text} ",
+                    "Your order #123456789 has been $text ",
                     style: GoogleFonts.nunitoSans(
                       color: Color(0xff242424),
                       fontSize: 12,

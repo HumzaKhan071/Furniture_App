@@ -85,7 +85,7 @@ class ReviewScreen extends StatelessWidget {
               SizedBox(height: 10),
               MyContainer(
                 name: "Tracy Mosby",
-                image: "assets/avatar2.png",
+                image: "assets/avatar3.png",
               ),
             ],
           ),

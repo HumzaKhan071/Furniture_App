@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:furniture_app/Screens/CongratzScreens/CongratzScreen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'Widget/MyNotificationContainer.dart';
