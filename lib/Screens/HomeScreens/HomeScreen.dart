@@ -14,6 +14,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
         title: Column(
@@ -38,7 +39,13 @@ class HomeScreen extends StatelessWidget {
         ),
         leading: Icon(Icons.search_rounded, color: Color(0xff808080)),
         actions: [
-          Icon(Icons.shopping_cart_outlined, color: Color(0xff808080)),
+          Icon(
+            Icons.shopping_cart_outlined,
+            color: Color(0xff808080),
+          ),
+          SizedBox(
+            width: 10,
+          ),
         ],
       ),
       body: Padding(

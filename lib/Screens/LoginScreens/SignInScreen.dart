@@ -11,6 +11,7 @@ class SigninScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: Color(0xffF5F5F5),
       body: Padding(
         padding: const EdgeInsets.only(
             top: 8.0, left: 20.0, right: 8.0, bottom: 8.0),

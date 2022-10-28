@@ -1,16 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:furniture_app/Screens/CartScreens/CartScreen.dart';
+import 'package:furniture_app/Screens/FavoriteScreens/Model/MyListTileModel.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'Widget/MyCustomListTile.dart';
 
 class FavoriteScreen extends StatelessWidget {
   const FavoriteScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xffF5F5F5),
+      persistentFooterButtons: [
+        Container(
+          height: 50,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+              color: Colors.black, borderRadius: BorderRadius.circular(8)),
+          child: TextButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CartScreen()));
+              },
+              child: Text(
+                "Add all to my cart",
+                style: GoogleFonts.nunitoSans(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500),
+              )),
+        )
+      ],
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xffF5F5F5),
         elevation: 0,
         leading: Icon(Icons.search, color: Color(0xff242424)),
         actions: [
@@ -29,66 +52,15 @@ class FavoriteScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(
-            top: 8.0, left: 20.0, right: 8.0, bottom: 8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  height: 100,
-                  width: 100,
-                  decoration: BoxDecoration(
-                    image:
-                        DecorationImage(image: AssetImage("assets/Table.png")),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Coffee Table",
-                        style: GoogleFonts.nunitoSans(
-                          color: Color(0xff242424),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                        )),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text("\$ 50.00",
-                        style: GoogleFonts.nunitoSans(
-                          color: Color(0xff242424),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                        )),
-                  ],
-                ),
-                SizedBox(
-                  width: size.width * 0.3,
-                ),
-                Container(
-                  height: 30,
-                  width: 30,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Color(0xff242424),
-                      )),
-                  child: Icon(
-                    Icons.close,
-                    color: Colors.black,
-                  ),
-                )
-              ],
-            ),
-          ],
-        ),
+      body: ListView.builder(
+        itemCount: myListTileModel.length,
+        itemBuilder: (context, index) {
+          return MyCustomListTile(
+            title: myListTileModel[index].title,
+            subtitle: myListTileModel[index].subtitle,
+            image: myListTileModel[index].image,
+          );
+        },
       ),
     );
   }
