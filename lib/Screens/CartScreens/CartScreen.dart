@@ -13,6 +13,7 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  int total = 1000;
   final Stream<QuerySnapshot> _itemsStream =
       FirebaseFirestore.instance.collection('items').snapshots();
 
@@ -20,6 +21,30 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
+      persistentFooterButtons: [
+        Container(
+          height: 44,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Color(0xff242424),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: TextButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => CheckOutScreen()));
+            },
+            child: Text(
+              "Checkout",
+              style: GoogleFonts.nunitoSans(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ),
+      ],
       backgroundColor: Color(0xffF5F5F5),
       appBar: AppBar(
         backgroundColor: Color(0xffF5F5F5),
@@ -55,7 +80,9 @@ class _CartScreenState extends State<CartScreen> {
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator(
+                        color: Color(0xff242424),
+                      ),
                     );
                   }
 
@@ -68,7 +95,7 @@ class _CartScreenState extends State<CartScreen> {
                         image: data["image"],
                         title: data["title"],
                         price: data["price"],
-                       
+                        quantity: data["quantity"],
                       );
                     }).toList(),
                   );
@@ -133,7 +160,7 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                     ),
                     Text(
-                      "\$ 1,000",
+                      "\$ $total",
                       style: GoogleFonts.nunitoSans(
                         color: Color(0xff242424),
                         fontSize: 20,
@@ -141,33 +168,6 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                     ),
                   ],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  height: 44,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Color(0xff242424),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CheckOutScreen()));
-                    },
-                    child: Text(
-                      "Checkout",
-                      style: GoogleFonts.nunitoSans(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
                 ),
               ],
             ),

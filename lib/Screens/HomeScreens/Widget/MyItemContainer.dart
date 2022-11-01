@@ -28,61 +28,44 @@ class MyItemContainer extends StatelessWidget {
                     )));
       },
       child: Container(
-        height: 253,
-        width: 177,
+        height: 200,
+        width: 157,
         decoration: BoxDecoration(
+          image: DecorationImage(image: AssetImage(image), fit: BoxFit.cover),
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Stack(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Container(
-              height: 200,
-              width: 157,
+              height: 50,
+              padding: EdgeInsets.all(6),
+              width: double.infinity,
               decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage(image), fit: BoxFit.cover),
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-            Positioned(
-              bottom: 52,
-              right: 20,
-              child: Container(
-                height: 37,
-                width: 37,
-                decoration: BoxDecoration(
-                  color: Color(0xff606060),
-                  borderRadius: BorderRadius.circular(6),
+                color: Colors.white.withOpacity(0.5),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
                 ),
-                child: Center(
-                  child: Icon(
-                    Icons.shopping_bag,
-                    color: Colors.white,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: GoogleFonts.nunitoSans(
+                      color: Color(0xff606060),
+                      fontSize: 14,
+                    ),
                   ),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 15,
-              left: 4,
-              child: Text(
-                title,
-                style: GoogleFonts.nunitoSans(
-                  fontSize: 14,
-                  color: Color(0xff606060),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 4,
-              child: Text(
-                price,
-                style: GoogleFonts.nunitoSans(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xff303030),
-                ),
+                  Text(
+                    price,
+                    style: GoogleFonts.nunitoSans(
+                        color: Color(0xff303030),
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
             )
           ],

@@ -19,12 +19,14 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen> {
   CollectionReference items = FirebaseFirestore.instance.collection('items');
+  int count = 0;
 
   Future<void> addItem(String title, String price, String image) {
     return items.doc(title).set({
       'title': title,
       'price': price,
       'image': image,
+      "quantity": count,
     }).then((value) {
       var snackBar = SnackBar(
         elevation: 0,
@@ -45,6 +47,44 @@ class _ProductScreenState extends State<ProductScreen> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
+        persistentFooterButtons: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                    color: Color(0xffF0F0F0),
+                    borderRadius: BorderRadius.circular(6)),
+                child: Center(
+                  child: Icon(
+                    Icons.bookmark_border_outlined,
+                    size: 30,
+                  ),
+                ),
+              ),
+              Container(
+                height: 60,
+                width: 290,
+                decoration: BoxDecoration(
+                    color: Color(0xff242424),
+                    borderRadius: BorderRadius.circular(6)),
+                child: TextButton(
+                    onPressed: () {
+                      addItem(widget.title, widget.price, widget.image);
+                    },
+                    child: Text(
+                      "Add to Cart",
+                      style: GoogleFonts.nunitoSans(
+                          color: Color(0xffffffff),
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700),
+                    )),
+              )
+            ],
+          )
+        ],
         backgroundColor: Color(0xffF5F5F5),
         body: SingleChildScrollView(
           child:
@@ -152,19 +192,28 @@ class _ProductScreenState extends State<ProductScreen> {
                         Row(
                           children: [
                             Container(
-                              width: 30,
-                              height: 30,
+                              width: 40,
+                              height: 40,
                               decoration: BoxDecoration(
                                   color: Color(0xffF0F0F0),
                                   borderRadius: BorderRadius.circular(6)),
                               child: Center(
-                                child: Icon(Icons.add),
+                                child: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        count++;
+                                      });
+                                    },
+                                    icon: Icon(
+                                      Icons.add,
+                                      size: 25,
+                                    )),
                               ),
                             ),
                             SizedBox(
                               width: 10,
                             ),
-                            Text("1",
+                            Text(count.toString(),
                                 style: GoogleFonts.nunitoSans(
                                     color: Color(0xff303030),
                                     fontSize: 20,
@@ -173,13 +222,24 @@ class _ProductScreenState extends State<ProductScreen> {
                               width: 10,
                             ),
                             Container(
-                              width: 30,
-                              height: 30,
+                              width: 40,
+                              height: 40,
                               decoration: BoxDecoration(
                                   color: Color(0xffF0F0F0),
                                   borderRadius: BorderRadius.circular(6)),
                               child: Center(
-                                child: Icon(Icons.remove),
+                                child: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        if (count > 0) {
+                                          count--;
+                                        }
+                                      });
+                                    },
+                                    icon: Icon(
+                                      Icons.remove,
+                                      size: 25,
+                                    )),
                               ),
                             ),
                           ],
@@ -216,48 +276,6 @@ class _ProductScreenState extends State<ProductScreen> {
                             color: Color(0xff808080),
                             fontSize: 14,
                             fontWeight: FontWeight.w300)),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                              color: Color(0xffF0F0F0),
-                              borderRadius: BorderRadius.circular(6)),
-                          child: Center(
-                            child: Icon(
-                              Icons.bookmark_border_outlined,
-                              size: 30,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          height: 60,
-                          width: 277,
-                          decoration: BoxDecoration(
-                              color: Color(0xff242424),
-                              borderRadius: BorderRadius.circular(6)),
-                          child: TextButton(
-                              onPressed: () {
-                                addItem(
-                                    widget.title, widget.price, widget.image);
-                              },
-                              child: Text(
-                                "Add to Cart",
-                                style: GoogleFonts.nunitoSans(
-                                    color: Color(0xffffffff),
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700),
-                              )),
-                        )
-                      ],
-                    )
                   ]),
             ),
           ]),

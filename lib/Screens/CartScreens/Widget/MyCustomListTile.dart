@@ -6,12 +6,14 @@ class MyCustomListTile extends StatefulWidget {
   final String image;
   final String title;
   final String price;
+  int quantity;
 
-  const MyCustomListTile({
+  MyCustomListTile({
     super.key,
     required this.image,
     required this.title,
     required this.price,
+    required this.quantity,
   });
 
   @override
@@ -34,7 +36,7 @@ class _MyCustomListTileState extends State<MyCustomListTile> {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
       child: Container(
-        height: 100,
+        height: 110,
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -84,14 +86,22 @@ class _MyCustomListTileState extends State<MyCustomListTile> {
                 Row(
                   children: [
                     Container(
-                      height: 25,
-                      width: 25,
+                      height: 40,
+                      width: 40,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(6),
                         color: Color(0xffE0E0E0),
                       ),
-                      child: Icon(
-                        Icons.add,
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            widget.quantity++;
+                          });
+                        },
+                        icon: Icon(
+                          Icons.add,
+                          size: 25,
+                        ),
                         color: Color(0xff808080),
                       ),
                     ),
@@ -99,7 +109,7 @@ class _MyCustomListTileState extends State<MyCustomListTile> {
                       width: 5,
                     ),
                     Text(
-                      "01",
+                      widget.quantity.toString(),
                       style: GoogleFonts.nunitoSans(
                         color: Color(0xff242424),
                         fontSize: 18,
@@ -110,15 +120,27 @@ class _MyCustomListTileState extends State<MyCustomListTile> {
                       width: 5,
                     ),
                     Container(
-                      height: 25,
-                      width: 25,
+                      height: 40,
+                      width: 40,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(6),
                         color: Color(0xffE0E0E0),
                       ),
-                      child: Icon(
-                        Icons.remove,
-                        color: Color(0xff808080),
+                      child: Center(
+                        child: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              if (widget.quantity > 0) {
+                                widget.quantity--;
+                              }
+                            });
+                          },
+                          icon: Icon(
+                            Icons.remove,
+                            size: 25,
+                          ),
+                          color: Color(0xff808080),
+                        ),
                       ),
                     ),
                   ],
@@ -127,7 +149,7 @@ class _MyCustomListTileState extends State<MyCustomListTile> {
             ),
             Spacer(),
             Padding(
-                padding: const EdgeInsets.only(right: 10),
+                padding: const EdgeInsets.only(right: 2),
                 child: Align(
                   alignment: Alignment.topRight,
                   child: IconButton(

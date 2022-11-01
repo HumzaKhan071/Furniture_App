@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:furniture_app/Screens/CartScreens/CartScreen.dart';
 import 'package:furniture_app/Screens/ProductScreens/AddproductScreen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'Model/MyContainerModel.dart';
@@ -16,6 +17,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final Stream<QuerySnapshot> _myItemsStream =
       FirebaseFirestore.instance.collection('myItems').snapshots();
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +56,13 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.add),
             color: Color(0xff808080)),
         actions: [
-          Icon(
-            Icons.shopping_cart_outlined,
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => CartScreen()));
+              
+            },
+            icon: Icon(Icons.shopping_cart_outlined),
             color: Color(0xff808080),
           ),
           SizedBox(
@@ -93,7 +101,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     }
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator(
+                          color: Color(0xff242424),
+                        ),
                       );
                     }
                     return GridView.count(
