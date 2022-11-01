@@ -24,12 +24,12 @@ class MyItemContainer extends StatelessWidget {
                 builder: (_) => ProductScreen(
                       title: title,
                       price: price,
-                      image: "assets/Stand Large.png",
+                      image: image,
                     )));
       },
       child: Container(
         height: 253,
-        width: 157,
+        width: 177,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
         ),

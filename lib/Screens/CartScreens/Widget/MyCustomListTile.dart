@@ -1,16 +1,33 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MyCustomListTile extends StatelessWidget {
+class MyCustomListTile extends StatefulWidget {
   final String image;
   final String title;
-  final String subtitle;
+  final String price;
+
   const MyCustomListTile({
     super.key,
     required this.image,
     required this.title,
-    required this.subtitle,
+    required this.price,
   });
+
+  @override
+  State<MyCustomListTile> createState() => _MyCustomListTileState();
+}
+
+class _MyCustomListTileState extends State<MyCustomListTile> {
+  final Stream<QuerySnapshot> _itemsStream =
+      FirebaseFirestore.instance.collection('items').snapshots();
+
+  Future<void> deleteItem() async {
+    await FirebaseFirestore.instance
+        .collection('items')
+        .doc(widget.title)
+        .delete();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +47,7 @@ class MyCustomListTile extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 image: DecorationImage(
-                  image: AssetImage(image),
+                  image: AssetImage(widget.image),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -43,7 +60,7 @@ class MyCustomListTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  widget.title,
                   style: GoogleFonts.nunitoSans(
                     color: Color(0xff242424),
                     fontSize: 16,
@@ -54,7 +71,7 @@ class MyCustomListTile extends StatelessWidget {
                   height: 5,
                 ),
                 Text(
-                  subtitle,
+                  widget.price,
                   style: GoogleFonts.nunitoSans(
                     color: Color(0xff242424),
                     fontSize: 14,
@@ -110,26 +127,19 @@ class MyCustomListTile extends StatelessWidget {
             ),
             Spacer(),
             Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: Align(
-                alignment: Alignment.topRight,
-                child: Container(
-                  height: 16,
-                  width: 16,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
+                padding: const EdgeInsets.only(right: 10),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                    onPressed: () {
+                      deleteItem();
+                    },
+                    icon: Icon(
+                      Icons.close,
                       color: Color(0xff242424),
                     ),
                   ),
-                  child: Icon(
-                    Icons.close,
-                    size: 10,
-                    color: Color(0xff242424),
-                  ),
-                ),
-              ),
-            ),
+                )),
           ],
         ),
       ),

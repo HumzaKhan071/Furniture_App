@@ -1,12 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:furniture_app/Screens/CartScreens/Widget/MyCustomListTile.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../CheckOutScreens/CheckOutScreen.dart';
-import 'Model/MyCartModel.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
+
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  final Stream<QuerySnapshot> _itemsStream =
+      FirebaseFirestore.instance.collection('items').snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -32,124 +40,139 @@ class CartScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 400,
-              width: double.infinity,
-              child: ListView.builder(
-                itemCount: myCartModel.length,
-                itemBuilder: (context, index) {
-                  return MyCustomListTile(
-                    title: myCartModel[index].title,
-                    subtitle: myCartModel[index].subtitle,
-                    image: myCartModel[index].image,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 400,
+            width: double.infinity,
+            child: StreamBuilder<QuerySnapshot>(
+                stream: _itemsStream,
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Something went wrong');
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  return ListView(
+                    children:
+                        snapshot.data!.docs.map((DocumentSnapshot document) {
+                      Map<String, dynamic> data =
+                          document.data() as Map<String, dynamic>;
+                      return MyCustomListTile(
+                        image: data["image"],
+                        title: data["title"],
+                        price: data["price"],
+                       
+                      );
+                    }).toList(),
                   );
-                },
-              ),
-            ),
-            SizedBox(
-              height: size.height * 0.1,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Container(
-                      height: 44,
-                      width: double.infinity,
-                      padding: EdgeInsets.only(
-                        left: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Enter Coupon Code",
-                            style: GoogleFonts.nunitoSans(
-                              color: Color(0xff999999),
-                              fontSize: 16,
-                            ),
-                          ),
-                          Container(
-                            height: 44,
-                            width: 44,
-                            decoration: BoxDecoration(
-                              color: Color(0xff303030),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Center(
-                              child: Icon(
-                                Icons.arrow_forward_ios,
-                                color: Colors.white,
-                                size: 16,
-                              ),
-                            ),
-                          )
-                        ],
-                      )),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Total",
-                        style: GoogleFonts.nunitoSans(
-                          color: Color(0xff808080),
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      Text(
-                        "\$ 95.00",
-                        style: GoogleFonts.nunitoSans(
-                          color: Color(0xff242424),
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
+                }),
+          ),
+          SizedBox(
+            height: size.height * 0.1,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Container(
                     height: 44,
                     width: double.infinity,
+                    padding: EdgeInsets.only(
+                      left: 8,
+                    ),
                     decoration: BoxDecoration(
-                      color: Color(0xff242424),
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CheckOutScreen()));
-                      },
-                      child: Text(
-                        "Checkout",
-                        style: GoogleFonts.nunitoSans(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Enter Coupon Code",
+                          style: GoogleFonts.nunitoSans(
+                            color: Color(0xff999999),
+                            fontSize: 16,
+                          ),
                         ),
+                        Container(
+                          height: 44,
+                          width: 44,
+                          decoration: BoxDecoration(
+                            color: Color(0xff303030),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Center(
+                            child: Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                          ),
+                        )
+                      ],
+                    )),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Total",
+                      style: GoogleFonts.nunitoSans(
+                        color: Color(0xff808080),
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Text(
+                      "\$ 1,000",
+                      style: GoogleFonts.nunitoSans(
+                        color: Color(0xff242424),
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  height: 44,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Color(0xff242424),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CheckOutScreen()));
+                    },
+                    child: Text(
+                      "Checkout",
+                      style: GoogleFonts.nunitoSans(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

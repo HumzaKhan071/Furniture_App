@@ -1,12 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:furniture_app/Screens/ProductScreens/AddproductScreen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'Model/MyContainerModel.dart';
-import 'Model/MyItemContainerModel.dart';
 import 'Widget/MyContainer.dart';
 import 'Widget/MyItemContainer.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final Stream<QuerySnapshot> _myItemsStream =
+      FirebaseFirestore.instance.collection('myItems').snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +45,13 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
-        leading: Icon(Icons.search_rounded, color: Color(0xff808080)),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => AddProductScreen()));
+            },
+            icon: Icon(Icons.add),
+            color: Color(0xff808080)),
         actions: [
           Icon(
             Icons.shopping_cart_outlined,
@@ -47,46 +62,60 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(
-            top: 8.0, left: 20.0, right: 8.0, bottom: 8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: List.generate(
-                      myContainerModel.length,
-                      (index) => Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: MyContainer(
-                              color: myContainerModel[index].color,
-                              iconData: myContainerModel[index].iconData,
-                              iconColor: myContainerModel[index].iconColor,
-                            ),
-                          )),
-                )),
-            SizedBox(
-              height: 20,
-            ),
-            GridView.count(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              shrinkWrap: true,
-              childAspectRatio: 0.72,
-              physics: BouncingScrollPhysics(),
-              children: List.generate(
-                  myItemContainerModel.length,
-                  (index) => MyItemContainer(
-                        image: myItemContainerModel[index].image,
-                        price: myItemContainerModel[index].price,
-                        title: myItemContainerModel[index].title,
-                      )),
-            )
-          ],
-        ),
+      body: SingleChildScrollView(
+        child: Padding(
+            padding: const EdgeInsets.only(
+                top: 8.0, left: 20.0, right: 8.0, bottom: 8.0),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: List.generate(
+                        myContainerModel.length,
+                        (index) => Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: MyContainer(
+                                color: myContainerModel[index].color,
+                                iconData: myContainerModel[index].iconData,
+                                iconColor: myContainerModel[index].iconColor,
+                              ),
+                            )),
+                  )),
+              SizedBox(
+                height: 20,
+              ),
+              StreamBuilder(
+                  stream: _myItemsStream,
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('Something went wrong');
+                    }
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return GridView.count(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      shrinkWrap: true,
+                      childAspectRatio: 0.72,
+                      physics: BouncingScrollPhysics(),
+                      children:
+                          snapshot.data!.docs.map((DocumentSnapshot document) {
+                        Map<String, dynamic> data =
+                            document.data() as Map<String, dynamic>;
+                        return MyItemContainer(
+                          image: data['image'],
+                          price: data['price'],
+                          title: data['title'],
+                        );
+                      }).toList(),
+                    );
+                  })
+            ])),
       ),
     );
   }

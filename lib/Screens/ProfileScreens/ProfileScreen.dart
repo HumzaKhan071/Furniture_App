@@ -1,11 +1,45 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:furniture_app/Screens/OnBoardingScreens/OnBoardingScreen.dart';
 
 import 'package:furniture_app/Screens/ProfileScreens/Model/MyProfileScreen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut().then((value) {
+      var snackBar = SnackBar(
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: "Success",
+          message: "Logout Successfully",
+          contentType: ContentType.success,
+        ),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    });
+
+    if (FirebaseAuth.instance.currentUser == null) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OnBoardingScreen(),
+        ),
+        (route) => true,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +64,7 @@ class ProfileScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (_) => OnBoardingScreen()),
-                  (route) => true);
+              signOut();
             },
             icon: Icon(
               Icons.exit_to_app,
